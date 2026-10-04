@@ -1,0 +1,5 @@
+iso/
+*.id
+*.elf
+*.o
+*.iso
