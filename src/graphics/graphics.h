@@ -2,7 +2,7 @@
 #define GRAPHICS_H
 
 #include <stdint.h>
-#include <limine.h>
+#include <limine/limine.h>
 
 typedef struct
 {
@@ -12,6 +12,8 @@ typedef struct
     uint64_t pitch;
     uint16_t bpp;
 } FrameBuffer;
+
+int validate_request(struct limine_framebuffer_request *request);
 
 FrameBuffer init_buff(
     volatile struct limine_framebuffer_request *request
@@ -33,5 +35,23 @@ void draw_rect(
     uint32_t color
 );
 
-#endif
+void cls(FrameBuffer fb);
+void draw_menu(FrameBuffer fb);
 
+void draw_glyph(
+    FrameBuffer fb,
+    uint32_t x,
+    uint64_t y,
+    unsigned char c,
+    uint32_t color
+);
+
+void _printk(
+    FrameBuffer fb,
+    uint32_t x,
+    uint64_t y,
+    char *str,
+    uint32_t color
+);
+
+#endif

@@ -1,6 +1,6 @@
-CC = gcc
+CC := gcc
 
-CFLAGS = \
+CFLAGS := \
 	-std=gnu11 \
 	-ffreestanding \
 	-fno-stack-protector \
@@ -12,46 +12,42 @@ CFLAGS = \
 	-Isrc \
 	-mcmodel=kernel
 
-LDFLAGS = \
+LDFLAGS := \
 	-nostdlib \
 	-static \
 	-no-pie \
 	-T linker.ld
 
-BUILD = build
+BUILD_DIR := build
+KERNEL := main.elf
+SRCS := \
+	src/main.c \
+	src/limine/request.c \
+	src/graphics/graphics.c \
+	src/graphics/font.c
+OBJS := $(patsubst src/%.c,$(BUILD_DIR)/%.o,$(SRCS))
 
-OBJS = \
-	$(BUILD)/main.o \
-	$(BUILD)/graphics.o
+.PHONY: all build clean iso run
 
-KERNEL = main.elf
+all: clean iso run
 
-.PHONY: all clean run iso
+build: $(KERNEL)
 
-all: $(KERNEL)
+$(BUILD_DIR):
+	mkdir -p $@
 
-$(BUILD):
-	mkdir -p $(BUILD)
-
-
-$(BUILD)/main.o: src/main.c src/graphics.h src/limine.h | $(BUILD)
-	$(CC) $(CFLAGS) -c src/main.c -o $(BUILD)/main.o
-
-
-$(BUILD)/graphics.o: src/graphics.c src/graphics.h | $(BUILD)
-	$(CC) $(CFLAGS) -c src/graphics.c -o $(BUILD)/graphics.o
-
+$(BUILD_DIR)/%.o: src/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) -c $< -o $@
 
 $(KERNEL): $(OBJS)
-	$(CC) $(LDFLAGS) $(OBJS) -o $(KERNEL)
+	$(CC) $(LDFLAGS) $(OBJS) -o $@
 
-
-clean:
-	rm -rf $(BUILD) $(KERNEL)
+iso: $(KERNEL)
+	./scripts/iso.sh
 
 run: iso
 	./scripts/run.sh
 
-
-iso: $(KERNEL)
-	./scripts/iso.sh
+clean:
+	rm -rf $(BUILD_DIR) $(KERNEL) zos.iso
