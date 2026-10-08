@@ -9,7 +9,7 @@ CFLAGS := \
 	-mno-red-zone \
 	-Wall \
 	-Wextra \
-	-Isrc \
+	-Isrc/include \
 	-mcmodel=kernel
 
 LDFLAGS := \
@@ -21,11 +21,17 @@ LDFLAGS := \
 BUILD_DIR := build
 KERNEL := main.elf
 SRCS := \
-	src/main.c \
-	src/limine/request.c \
-	src/graphics/graphics.c \
-	src/graphics/font.c
-OBJS := $(patsubst src/%.c,$(BUILD_DIR)/%.o,$(SRCS))
+	src/kernel/main.c \
+	src/kernel/limine/request.c \
+	src/kernel/graphics/graphics.c \
+	src/kernel/graphics/font.c \
+	src/kernel/utils/string.c \
+	src/kernel/char/stdout.c \
+	src/kernel/char/printk.c \
+	src/kernel/init.c \
+	src/kernel/utils/panic.c
+
+OBJS := $(patsubst src/kernel/%.c,$(BUILD_DIR)/%.o,$(SRCS))
 
 .PHONY: all build clean iso run
 
@@ -36,7 +42,7 @@ build: $(KERNEL)
 $(BUILD_DIR):
 	mkdir -p $@
 
-$(BUILD_DIR)/%.o: src/%.c
+$(BUILD_DIR)/%.o: src/kernel/%.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@
 
