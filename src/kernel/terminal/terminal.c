@@ -1,7 +1,7 @@
-#include <char/stdout.h>
+#include <terminal/terminal.h>
 
 #include <graphics/graphics.h>
-#include <utils/string.h>
+#include <lib/string.h>
 
 static const uint32_t INIT_TX = 10;
 static const uint32_t INIT_TY = 60;
@@ -10,13 +10,13 @@ static const uint32_t TY_INC = 15;
 static uint32_t ty;
 static uint32_t tx;
 
-void init_stdout(void)
+void init_terminal(void)
 {
     ty = INIT_TY;
     tx = INIT_TX;
 }
 
-void stdout_write(char *str, uint32_t color)
+void write_terminal(char *str, uint32_t color)
 {
     int length = strlen(str);
     

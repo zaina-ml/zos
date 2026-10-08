@@ -14,8 +14,8 @@
  * CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
  */
 
-#ifndef LIMINE_H
-#define LIMINE_H 1
+#ifndef DRIVERS_VIDEO_LIMINE_H
+#define DRIVERS_VIDEO_LIMINE_H 1
 
 #include <stdint.h>
 

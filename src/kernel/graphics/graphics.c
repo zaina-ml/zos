@@ -5,65 +5,13 @@
 #include <graphics/colors.h>
 #include <graphics/font.h>
 
-#include <limine/limine.h>
-#include <limine/request.h>
-#include <utils/string.h>
-
-typedef struct
-{
-    void *address;
-    uint64_t width;
-    uint64_t height;
-    uint64_t pitch;
-    uint16_t bpp;
-} FrameBuffer;
-
-static FrameBuffer framebuffer;
-
-static int init_framebuffer(volatile struct limine_framebuffer_request *request)
-{
-    if (request == NULL || request->response == NULL ||
-        request->response->framebuffer_count == 0 ||
-        request->response->framebuffers == NULL ||
-        request->response->framebuffers[0] == NULL)
-    {
-        return 1;
-    }
-
-    struct limine_framebuffer *fr = request->response->framebuffers[0];
-
-    if (fr->address == NULL)
-    {
-        return 1;
-    }
-
-    framebuffer.address = fr->address;
-    framebuffer.width = fr->width;
-    framebuffer.height = fr->height;
-    framebuffer.pitch = fr->pitch;
-    framebuffer.bpp = fr->bpp;
-
-    return 0;
-}
+#include <drivers/video/framebuffer.h>
+#include <lib/string.h>
 
 void init_graphics(void)
 {
-    init_framebuffer(get_framebuffer_request());
+    init_framebuffer();
     draw_menu();
-}
-
-void draw_pixel(uint64_t x, uint64_t y, uint32_t color)
-{
-    if (x >= framebuffer.width || y >= framebuffer.height)
-        return;
-
-    uint8_t *base = (uint8_t *)framebuffer.address;
-
-    volatile uint32_t *pixel =
-        (volatile uint32_t *)
-        (base + y * framebuffer.pitch + x * (framebuffer.bpp / 8));
-
-    *pixel = color;
 }
 
 void draw_rect(
@@ -78,22 +26,22 @@ void draw_rect(
     {
         for (uint64_t xp = x; xp < x + width; xp++) 
         {
-            draw_pixel(xp, yp, color); 
+            fb_draw_pixel(xp, yp, color);
         } 
     } 
 }
 
 void cls(void)
 {
-    draw_rect(0, 0, framebuffer.width, framebuffer.height, BLACK);
+    draw_rect(0, 0, fb_get_width(), fb_get_height(), BLACK);
 }
 
 void draw_menu(void) 
 {
     char *title = "zOS";
 
-    draw_rect(0, 0, framebuffer.width, 50, BLUE);
-    draw_chars(cntrstring(framebuffer.width, title), 25, title, WHITE);
+    draw_rect(0, 0, fb_get_width(), 50, BLUE);
+    draw_chars(cntrstring(fb_get_width(), title), 25, title, WHITE);
 }
 
 void draw_panic(char *message) 
@@ -102,14 +50,14 @@ void draw_panic(char *message)
 
     draw_rect(
         0,
-        (framebuffer.height - 100) / 2,
-        framebuffer.width,
+        (fb_get_height() - 100) / 2,
+        fb_get_width(),
         100,
         BLUE
     );
 
-    draw_chars(cntrstring(framebuffer.width, title), (framebuffer.height - 50) / 2, title, WHITE);
-    draw_chars(cntrstring(framebuffer.width, message), (framebuffer.height + 10) / 2, message, WHITE);
+    draw_chars(cntrstring(fb_get_width(), title), (fb_get_height() - 50) / 2, title, WHITE);
+    draw_chars(cntrstring(fb_get_width(), message), (fb_get_height() + 10) / 2, message, WHITE);
 }
 
 
@@ -130,7 +78,7 @@ void draw_glyph(
         {
             if (bits & (1 << col)) 
             {
-                draw_pixel(x + col, y + row, color);
+                fb_draw_pixel(x + col, y + row, color);
             }
         }
     }

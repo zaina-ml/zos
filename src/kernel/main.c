@@ -1,10 +1,9 @@
 #include <graphics/graphics.h>
 
 #include <init.h>
-#include <char/printk.h>
-#include <char/stdout.h>
+#include <terminal/printk.h>
 
-#include <utils/panic.h>
+#include <panic.h>
 
 
 __attribute__((noreturn))

@@ -22,14 +22,14 @@ BUILD_DIR := build
 KERNEL := main.elf
 SRCS := \
 	src/kernel/main.c \
-	src/kernel/limine/request.c \
+	src/kernel/drivers/video/framebuffer.c \
 	src/kernel/graphics/graphics.c \
 	src/kernel/graphics/font.c \
-	src/kernel/utils/string.c \
-	src/kernel/char/stdout.c \
-	src/kernel/char/printk.c \
+	src/kernel/lib/string.c \
+	src/kernel/terminal/terminal.c \
+	src/kernel/terminal/printk.c \
 	src/kernel/init.c \
-	src/kernel/utils/panic.c
+	src/kernel/panic.c
 
 OBJS := $(patsubst src/kernel/%.c,$(BUILD_DIR)/%.o,$(SRCS))
 

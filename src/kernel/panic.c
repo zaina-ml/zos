@@ -1,5 +1,5 @@
 #include <graphics/graphics.h>
-#include <char/stdout.h>
+#include <terminal/terminal.h>
 
 
 void panic(char *message)

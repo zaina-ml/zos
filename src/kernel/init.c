@@ -1,11 +1,11 @@
 #include <graphics/graphics.h>
-#include <char/printk.h>
-#include <char/stdout.h>
+#include <terminal/printk.h>
+#include <terminal/terminal.h>
 
 void init(void) 
 {
     init_graphics();
-    init_stdout();
+    init_terminal();
 
     printk("Initialization Finished\n");
 }
