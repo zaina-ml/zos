@@ -12,7 +12,9 @@ void kmain(void)
     init();
 
     printk("(zosroot$) test\n");
-    printk("whats up!\n");
+    printk("whats up!\ndon't.");
     
-    for (;;) {}
+    for (;;) {
+        __asm__ volatile("hlt");
+    }
 }

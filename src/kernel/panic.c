@@ -7,7 +7,7 @@ void panic(char *message)
     cls();
     draw_panic(message);
     
-    while (1) 
+    for (;;)
     {
         __asm__ volatile("hlt");
     }

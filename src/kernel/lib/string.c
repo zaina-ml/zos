@@ -11,5 +11,5 @@ int strlen(char *str)
 
 int cntrstring(int width, char *str)
 {
-    return (width - strlen(str)) / 2;
+    return (width - strlen(str) * 8) / 2;
 }
