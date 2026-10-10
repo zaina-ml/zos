@@ -7,6 +7,7 @@ CFLAGS := \
 	-fno-pie \
 	-m64 \
 	-mno-red-zone \
+	-mgeneral-regs-only \
 	-Wall \
 	-Wextra \
 	-Isrc/include \
@@ -29,7 +30,10 @@ SRCS := \
 	src/kernel/terminal/terminal.c \
 	src/kernel/terminal/printk.c \
 	src/kernel/init.c \
-	src/kernel/panic.c
+	src/kernel/panic.c \
+	src/kernel/arch/x86_64/idt.c \
+	src/kernel/arch/x86_64/pic.c \
+	src/kernel/drivers/input/keyboard.c
 
 OBJS := $(patsubst src/kernel/%.c,$(BUILD_DIR)/%.o,$(SRCS))
 
